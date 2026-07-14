@@ -1,6 +1,5 @@
 package com.samuel.helpdesk.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,15 +18,13 @@ public class User {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String senha;
 
     @Enumerated(EnumType.STRING)
-    private EnumType role;
-
-
-
+    @Column(nullable = false)
+    private UserEnum role;
 }
