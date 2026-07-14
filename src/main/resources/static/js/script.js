@@ -233,7 +233,7 @@ async function deleteUser(id) {
 /* ---- TICKETS ---- */
 function renderTicketForm(ticket) {
     const isEdit = !!ticket;
-    const clienteOptions = State.users.filter(u => u.role === 'CLIENTE' || u.role === 'ADMIN');
+    const allUsers = State.users || [];
     return `
         <form id="ticketForm">
             <div class="form-group">
@@ -254,7 +254,7 @@ function renderTicketForm(ticket) {
             <div class="form-group">
                 <label for="ticketCliente">Cliente</label>
                 <select class="form-control" id="ticketCliente" required>
-                    ${getSelectOptions(clienteOptions)}
+                    ${allUsers.length ? getSelectOptions(allUsers) : '<option value="">Nenhum usuário encontrado. Crie um usuário primeiro.</option>'}
                 </select>
             </div>` : ''}
             <div class="modal-footer" style="padding:16px 0 0;border:none">
@@ -326,6 +326,10 @@ async function openTicketModal(id) {
     if (id) {
         try { ticket = await API.get(`/api/tickets/${id}`); } catch (e) { toast(e.message, 'error'); return; }
     }
+    if (!id && (!State.users || !State.users.length)) {
+        toast('Crie pelo menos um usuário antes de abrir um chamado', 'error');
+        return;
+    }
     openModal(ticket ? 'Editar Chamado' : 'Novo Chamado', renderTicketForm(ticket));
     if (ticket) {
         document.getElementById('ticketPrioridade').value = ticket.prioridade;
@@ -337,12 +341,16 @@ async function openTicketModal(id) {
             descricao: document.getElementById('ticketDescricao').value.trim(),
             prioridade: document.getElementById('ticketPrioridade').value
         };
+        if (!ticket) {
+            const clienteId = parseInt(document.getElementById('ticketCliente').value);
+            if (!clienteId) { toast('Selecione um cliente', 'error'); return; }
+            data.clienteId = clienteId;
+        }
         try {
             if (ticket) {
                 await API.put(`/api/tickets/${ticket.id}`, data);
                 toast('Chamado atualizado com sucesso');
             } else {
-                data.clienteId = parseInt(document.getElementById('ticketCliente').value);
                 await API.post('/api/tickets', data);
                 toast('Chamado criado com sucesso');
             }
