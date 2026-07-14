@@ -29,8 +29,13 @@ function toast(msg, type = 'success') {
 }
 
 function showLoading(show = true) {
-    document.getElementById('pageContent').innerHTML = show
-        ? '<div class="loading">Carregando...</div>' : '';
+    const el = document.getElementById('pageContent');
+    if (show) {
+        el.innerHTML = '<div class="loading">Carregando...</div>';
+    } else {
+        const loading = el.querySelector('.loading');
+        if (loading) loading.remove();
+    }
 }
 
 function openModal(title, bodyHtml, wide = false) {
