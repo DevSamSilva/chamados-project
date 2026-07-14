@@ -2,6 +2,7 @@ package com.samuel.helpdesk.controller;
 
 import com.samuel.helpdesk.dto.UserRequest;
 import com.samuel.helpdesk.dto.UserResponse;
+import com.samuel.helpdesk.dto.UserUpdateRequest;
 import com.samuel.helpdesk.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
         UserResponse response = userService.update(id, request);
         return ResponseEntity.ok(response);
     }

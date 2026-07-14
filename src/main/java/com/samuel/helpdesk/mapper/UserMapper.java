@@ -2,6 +2,7 @@ package com.samuel.helpdesk.mapper;
 
 import com.samuel.helpdesk.dto.UserRequest;
 import com.samuel.helpdesk.dto.UserResponse;
+import com.samuel.helpdesk.dto.UserUpdateRequest;
 import com.samuel.helpdesk.entity.User;
 
 public class UserMapper {
@@ -22,5 +23,11 @@ public class UserMapper {
         user.setSenha(request.senha());
         user.setRole(request.role());
         return user;
+    }
+
+    public static void updateEntity(User user, UserUpdateRequest request) {
+        user.setNome(request.nome());
+        user.setEmail(request.email());
+        user.setRole(request.role());
     }
 }
